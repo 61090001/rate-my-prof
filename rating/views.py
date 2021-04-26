@@ -136,7 +136,8 @@ def getProfessors(request):
         exclude_id = []
         for professor in metrics:
             exclude_id.append(professor['course__professor__course__professor__id'])
-            if offset >= len(metrics):
+            if offset >= len(metrics) or offset > 0:
+                offset -= 1
                 continue
             professors.append({
                 'id':professor['course__professor__course__professor__id'],
@@ -149,7 +150,6 @@ def getProfessors(request):
             if limit == 0:
                 break
 
-        offset -= len(metrics)
         if limit > 0:
             for professor in Professor.objects.exclude(id__in=exclude_id)[offset:offset+limit]:
                 professors.append({
